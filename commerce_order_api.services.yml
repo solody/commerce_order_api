@@ -1,0 +1,16 @@
+services:
+  commerce_order_api.normalizer.order_adjustment_field_item_normalizer:
+    class: Drupal\commerce_order_api\Normalizer\OrderAdjustmentFieldItemNormalizer
+    arguments: ['@entity.repository']
+    tags:
+      - { name: normalizer, priority: 9 }
+  commerce_order_api.normalizer.order_item_field_item_normalizer:
+    class: Drupal\commerce_order_api\Normalizer\OrderItemFieldItemNormalizer
+    arguments: ['@entity.repository']
+    tags:
+      - { name: normalizer, priority: 9 }
+  commerce_order_api.normalizer.order_billing_profile_field_item_normalizer:
+    class: Drupal\commerce_order_api\Normalizer\OrderBillingProfileFieldItemNormalizer
+    arguments: ['@entity.repository']
+    tags:
+      - { name: normalizer, priority: 9 }

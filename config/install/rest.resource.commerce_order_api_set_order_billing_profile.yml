@@ -1,0 +1,21 @@
+langcode: zh-hans
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - commerce_express
+    - serialization
+    - simple_oauth
+    - user
+id: commerce_order_api_set_order_billing_profile
+plugin_id: commerce_order_api_set_order_billing_profile
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - basic_auth
+    - oauth2
+    - cookie

@@ -1,0 +1,22 @@
+langcode: zh-hans
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - commerce_order
+    - serialization
+    - simple_oauth
+    - user
+id: entity.commerce_order
+plugin_id: 'entity:commerce_order'
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - PATCH
+  formats:
+    - json
+  authentication:
+    - basic_auth
+    - oauth2
+    - cookie

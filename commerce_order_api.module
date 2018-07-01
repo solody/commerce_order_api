@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_order_api.module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_order_api_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_order_api module.
+    case 'help.page.commerce_order_api':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('My Awesome Module') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_install().
+ */
+function commerce_order_api_install()
+{
+  // 为已认证用户添加权限
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, [
+    'view commerce_order',
+    'update commerce_order',
+    'view profile',
+    'create customer profile',
+    'update own customer profile',
+    'delete own customer profile',
+    'view own customer profile'
+  ]);
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function commerce_order_api_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions)
+{
+  if ($entity_type->id() == 'profile' && $bundle == 'customer') {
+    $fields = [];
+    $fields['phone'] = \Drupal\entity\BundleFieldDefinition::create('string')
+      ->setLabel(t('联系电话'))
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'inline',
+        'type' => 'string'
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield'
+      ])
+      ->setDisplayConfigurable('view', true)
+      ->setDisplayConfigurable('form', true);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_entity_field_storage_info().
+ */
+function commerce_order_api_entity_field_storage_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() == 'profile') {
+    $definitions['phone'] = \Drupal\entity\BundleFieldDefinition::create('string')
+      ->setName('phone')
+      ->setLabel(t('联系电话'))
+      ->setTargetEntityTypeId($entity_type->id());
+    return $definitions;
+  }
+}
