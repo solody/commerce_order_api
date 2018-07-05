@@ -8,7 +8,7 @@ services:
     class: Drupal\commerce_order_api\Normalizer\OrderItemFieldItemNormalizer
     arguments: ['@entity.repository']
     tags:
-      - { name: normalizer, priority: 9 }
+      - { name: normalizer, priority: 19 }
   commerce_order_api.normalizer.order_billing_profile_field_item_normalizer:
     class: Drupal\commerce_order_api\Normalizer\OrderBillingProfileFieldItemNormalizer
     arguments: ['@entity.repository']
