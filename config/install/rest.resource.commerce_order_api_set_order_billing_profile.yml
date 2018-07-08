@@ -3,7 +3,7 @@ status: true
 dependencies:
   module:
     - basic_auth
-    - commerce_express
+    - commerce_order_api
     - serialization
     - simple_oauth
     - user

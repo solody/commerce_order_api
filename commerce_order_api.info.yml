@@ -6,7 +6,11 @@ package: Custom
 dependencies:
   - basic_auth
   - commerce_order
+  - commerce_order_api
+  - profile
   - rest
   - serialization
   - simple_oauth
+  - state_machine
   - user
+  - views
