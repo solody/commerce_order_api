@@ -245,7 +245,6 @@ display:
         - url.query_args
       tags:
         - 'config:core.entity_view_display.profile.customer.default'
-        - 'config:core.entity_view_display.profile.order_contact.default'
   rest_export_1:
     display_plugin: rest_export
     id: rest_export_1
@@ -297,4 +296,3 @@ display:
         - url.query_args
       tags:
         - 'config:core.entity_view_display.profile.customer.default'
-        - 'config:core.entity_view_display.profile.order_contact.default'
