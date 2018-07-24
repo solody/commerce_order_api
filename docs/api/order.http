@@ -21,3 +21,18 @@ Authorization: Basic 15999643270 123
 }
 
 ###
+
+POST http://{{host}}/api/rest/commerce-order/none-cart-order?_format=json
+Content-Type: application/json
+
+{
+  "purchased_entity_type": "commerce_product_variation",
+  "purchased_items": [
+    {
+      "purchased_entity_id": 1,
+      "quantity": 1
+    }
+  ]
+}
+
+###
