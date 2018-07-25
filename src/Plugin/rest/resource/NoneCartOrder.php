@@ -202,7 +202,14 @@ class NoneCartOrder extends ResourceBase {
           if (!$order) {
             $order_type_id = $this->chainOrderTypeResolver->resolve($order_item);
             $store = $this->selectStore($purchased_entity);
-            $order = $this->cartProvider->createCart($order_type_id, $store);
+
+            $order = $this->cartProvider->getCart($order_type_id, $store);
+            if ($order) {
+              // 清空已有的购物车
+              $this->cartManager->emptyCart($order);
+            } else {
+              $order = $this->cartProvider->createCart($order_type_id, $store);
+            }
           }
           $this->cartManager->addOrderItem($order, $order_item, TRUE);
         }
