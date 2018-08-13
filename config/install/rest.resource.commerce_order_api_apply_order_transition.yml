@@ -1,0 +1,21 @@
+langcode: zh-hans
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - commerce_order_api
+    - serialization
+    - simple_oauth
+    - user
+id: commerce_order_api_apply_order_transition
+plugin_id: commerce_order_api_apply_order_transition
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - basic_auth
+    - oauth2
+    - cookie

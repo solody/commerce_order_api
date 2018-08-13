@@ -38,7 +38,8 @@ function commerce_order_api_install()
     'create customer profile',
     'update own customer profile',
     'delete own customer profile',
-    'view own customer profile'
+    'view own customer profile',
+    'restful post commerce_order_api_apply_order_transition'
   ]);
 }
 

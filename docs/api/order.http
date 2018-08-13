@@ -36,3 +36,15 @@ Content-Type: application/json
 }
 
 ###
+
+POST http://{{host}}/api/rest/commerce-order/apply-order-transition?_format=json
+Content-Type: application/json
+Authorization: Basic {{username}} {{password}}
+
+{
+  "order_id": 77,
+  "from_state": "fulfillment",
+  "transition": "fulfill"
+}
+
+###
