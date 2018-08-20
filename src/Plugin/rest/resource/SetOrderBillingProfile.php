@@ -94,9 +94,26 @@ class SetOrderBillingProfile extends ResourceBase {
     $commerce_order = Order::load($data['order_id']);
     if ($commerce_order instanceof OrderInterface) {
       // 保存收货地址
-      if ($data['billing_profile']) {
+      if (isset($data['billing_profile']) && !empty($data['billing_profile'])) {
         $billing_profile = Profile::load($data['billing_profile']);
         $commerce_order->set('billing_profile', $billing_profile);
+      } else {
+        // 尝试使用默认地址
+        if ($this->currentUser->isAuthenticated()) {
+          $default_profile = \Drupal::entityTypeManager()->getStorage('profile')->loadByProperties([
+            'uid' => $this->currentUser->id(),
+            'is_default' => true,
+            'status' => true
+          ]);
+
+          if (count($default_profile)) {
+            $default_profile = array_pop($default_profile);
+          }
+
+          if ($default_profile instanceof Profile) {
+            $commerce_order->set('billing_profile', $default_profile);
+          }
+        }
       }
 
       $commerce_order->save();
