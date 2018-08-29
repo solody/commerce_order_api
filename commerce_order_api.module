@@ -79,3 +79,50 @@ function commerce_order_api_entity_field_storage_info(EntityTypeInterface $entit
     return $definitions;
   }
 }
+
+
+/**
+ * Implements hook_cron
+ *
+ * 10天后，订单自动确认收货
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function commerce_order_api_cron() {
+  \Drupal::logger('commerce_order_api')->notice('检查需要自动确认收货的订单');
+
+  // TODO:: Make config from UI
+  $config_data = [
+    'default' => 10
+  ];
+
+  $rs = [];
+
+  foreach ($config_data as $order_type=>$days) {
+    $time = new DateTime('now', new DateTimeZone(\Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface::STORAGE_TIMEZONE));
+    $time->sub(new DateInterval('P'.$days.'D'));
+
+    $commerce_order_query = \Drupal::entityQuery('commerce_order');
+
+    $commerce_order_query
+      ->condition('state', 'fulfillment')
+      ->condition('created', $time->getTimestamp(), '<')
+      ->condition('type', $order_type);
+
+    $rs = array_merge($rs, $commerce_order_query->execute());
+  }
+
+  \Drupal::logger('simple_stock')->notice(count($rs). '个订单超时未确认收货：' . var_export($rs, true));
+
+  if (count($rs)) {
+    foreach ($rs as $order_id) {
+      $commerce_order = \Drupal\commerce_order\Entity\Order::load($order_id);
+      if (isset($commerce_order->getState()->getTransitions()['fulfill'])){
+        $commerce_order->getState()->applyTransition($commerce_order->getState()->getTransitions()['fulfill']);
+        $commerce_order->save();
+        \Drupal::logger('simple_stock')->notice('对超时订单'.$commerce_order->id() . '成功执行了确认收货操作');
+      }
+    }
+  }
+}
