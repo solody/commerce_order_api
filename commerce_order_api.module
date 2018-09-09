@@ -121,6 +121,7 @@ function commerce_order_api_cron() {
       if (isset($commerce_order->getState()->getTransitions()['fulfill'])){
         $commerce_order->getState()->applyTransition($commerce_order->getState()->getTransitions()['fulfill']);
         $commerce_order->save();
+        \Drupal::getContainer()->get('event_dispatcher')->dispatch(\Drupal\commerce_order_api\Event\OrderAutoCompleteEvent::ORDER_AUTO_COMPLETE, new \Drupal\commerce_order_api\Event\OrderAutoCompleteEvent($commerce_order));
         \Drupal::logger('simple_stock')->notice('对超时订单'.$commerce_order->id() . '成功执行了确认收货操作');
       }
     }
