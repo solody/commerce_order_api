@@ -14,3 +14,7 @@ services:
     arguments: ['@entity.repository']
     tags:
       - { name: normalizer, priority: 9 }
+  commerce_order_api.order_number_subscriber:
+    class: Drupal\commerce_order_api\EventSubscriber\OrderNumberSubscriber
+    tags:
+    - { name: event_subscriber }
