@@ -40,10 +40,14 @@ class OrderItemFieldItemNormalizer extends EntityReferenceFieldItemNormalizer {
             if ($product instanceof ProductInterface) {
               $product_data = [
                 'id' => $product->id(),
-                'name' => $product->getTitle()
+                'name' => $product->getTitle(),
+                'type' => $product->bundle()
               ];
-              if ($product->hasField('image') && $product->get('image')->entity) {
-                $product_data['image'] = file_create_url($product->get('image')->entity->getFileUri());
+              if ($product->hasField('image')) {
+                if ($product->get('image')->entity)
+                  $product_data['image'] = file_create_url($product->get('image')->entity->getFileUri());
+                else
+                  $product_data['image'] = '';
               }
               $data['_product'] = $product_data;
             }
