@@ -114,16 +114,20 @@ function commerce_order_api_cron() {
     $rs = array_merge($rs, $commerce_order_query->execute());
   }
 
-  \Drupal::logger('simple_stock')->notice(count($rs). '个订单超时未确认收货：' . var_export($rs, true));
+  \Drupal::logger('commerce_order_api')->notice(count($rs). '个订单超时未确认收货：' . var_export($rs, true));
 
   if (count($rs)) {
     foreach ($rs as $order_id) {
       $commerce_order = \Drupal\commerce_order\Entity\Order::load($order_id);
-      if (isset($commerce_order->getState()->getTransitions()['fulfill'])){
-        $commerce_order->getState()->applyTransition($commerce_order->getState()->getTransitions()['fulfill']);
+      $transitions = $commerce_order->getState()->getTransitions();
+      $transition = null;
+      if (isset($transitions['fulfill'])) $transition = $transitions['fulfill'];
+      if (isset($transitions['complete'])) $transition = $transitions['complete'];
+      if ($transition){
+        $commerce_order->getState()->applyTransition($transition);
         $commerce_order->save();
         \Drupal::getContainer()->get('event_dispatcher')->dispatch(\Drupal\commerce_order_api\Event\OrderAutoCompleteEvent::ORDER_AUTO_COMPLETE, new \Drupal\commerce_order_api\Event\OrderAutoCompleteEvent($commerce_order));
-        \Drupal::logger('simple_stock')->notice('对超时订单'.$commerce_order->id() . '成功执行了确认收货操作');
+        \Drupal::logger('commerce_order_api')->notice('对超时订单'.$commerce_order->id() . '成功执行了确认收货操作');
       }
     }
   }
