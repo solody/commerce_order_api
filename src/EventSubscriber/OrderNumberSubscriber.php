@@ -38,7 +38,7 @@ class OrderNumberSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
     $order = $event->getEntity();
     if (!$order->getOrderNumber()) {
-      $order->setOrderNumber(date('YmdHis-', time()) . $order->id() . '-' . rand(10000,99999));
+      $order->setOrderNumber(date('YmdHis', time()) . $order->id() . rand(10000,99999));
     }
   }
 
